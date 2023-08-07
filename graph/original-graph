@@ -1,0 +1,30 @@
+strict digraph {
+
+
+	"B" [  weight=0 ];
+
+	"B" -> "C" [  weight=0 ];
+
+	"B" -> "D" [  weight=0 ];
+
+	"C" [  weight=0 ];
+
+	"C" -> "A" [  weight=0 ];
+
+	"D" [  weight=0 ];
+
+	"D" -> "E" [  weight=0 ];
+
+	"E" [  weight=0 ];
+
+	"E" -> "F" [  weight=0 ];
+
+	"F" [  weight=0 ];
+
+	"F" -> "E" [  weight=0 ];
+
+	"A" [  weight=0 ];
+
+	"A" -> "B" [  weight=0 ];
+
+}

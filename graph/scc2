@@ -1,0 +1,6 @@
+strict digraph {
+
+
+	"D" [  weight=0 ];
+
+}
