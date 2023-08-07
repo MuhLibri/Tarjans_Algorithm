@@ -29,6 +29,9 @@ func readFile(fileName string) AdjacencyList {
 		if !found {
 			adjacencyList = append(adjacencyList, Node{name: string(scanner.Text()[0]), neighbours: []string{string(scanner.Text()[2])}})
 		}
+		if !adjacencyList.HaveNode(string(scanner.Text()[2])) {
+			adjacencyList = append(adjacencyList, Node{name: string(scanner.Text()[2]), neighbours: []string{}})
+		}
 	}
 	return adjacencyList
 }
