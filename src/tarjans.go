@@ -56,22 +56,24 @@ func (t *Tarjan) DFS(i int) {
 		if t.low[i].val == t.disc[i].val {
 			var tempList AdjacencyList
 			count := 1
-			for t.stack.Peek() != t.disc[i].nodeName {
+			if !t.stack.IsEmpty() {
+				for t.stack.Peek() != t.disc[i].nodeName {
+					nodeName := t.stack.Pop()
+					idx := t.adjacencyList.GetIndex(nodeName)
+					neighbours := t.findSccNeighbour(idx, t.low[idx].val)
+					node := Node{nodeName, neighbours}
+					tempList = append(tempList, node)
+					count++
+				}
 				nodeName := t.stack.Pop()
 				idx := t.adjacencyList.GetIndex(nodeName)
 				neighbours := t.findSccNeighbour(idx, t.low[idx].val)
 				node := Node{nodeName, neighbours}
 				tempList = append(tempList, node)
-				count++
-			}
-			nodeName := t.stack.Pop()
-			idx := t.adjacencyList.GetIndex(nodeName)
-			neighbours := t.findSccNeighbour(idx, t.low[idx].val)
-			node := Node{nodeName, neighbours}
-			tempList = append(tempList, node)
-			t.sccList = append(t.sccList, tempList)
-			if count == 2 {
-				t.bridgeList = append(t.bridgeList, tempList)
+				t.sccList = append(t.sccList, tempList)
+				if count == 2 {
+					t.bridgeList = append(t.bridgeList, tempList)
+				}
 			}
 		}
 	}

@@ -23,13 +23,13 @@ func main() {
 	var scc Tarjan
 	scc.adjacencyList = t
 	scc.findScc()
-	fmt.Println(scc.sccList)
 	fmt.Println(scc.low)
+	fmt.Println(scc.sccList)
 	fmt.Println(scc.bridgeList)
 
 	for i, a := range scc.sccList {
 		name := "scc" + strconv.Itoa(i+1)
-		fmt.Println(a)
+		//fmt.Println(a)
 		a.DrawGraph(name)
 	}
 

@@ -23,7 +23,11 @@ func (s *Stack) Pop() string {
 }
 
 func (s *Stack) Peek() string {
-	return s.elm[len(s.elm)-1]
+	if s.IsEmpty() {
+		return "Stack is Empty"
+	} else {
+		return s.elm[len(s.elm)-1]
+	}
 }
 
 func (s *Stack) Contain(str string) bool {
