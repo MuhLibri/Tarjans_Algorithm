@@ -22,3 +22,22 @@ Visualisasi yang didapatkan akan berupa file dengan ekstensi .svg
 ![image](https://github.com/MuhLibri/Tarjans_Algorithm/assets/104043362/14f0cd98-4c7e-40b5-b4e4-c21982a4c019)
 
 
+Bukalah file ekstensi .svg untuk melihat visualisasi
+
+![image](https://github.com/MuhLibri/Tarjans_Algorithm/assets/104043362/10591911-e29a-4344-82d5-bd53bf7c6388)
+
+
+
+# About Tarjans Algorithm
+Kompleksitas dari algoritma tarjans adalah O(V+E), dimana V adalah jumlah node/simpul dan E adalah jumlah edge/sisi. Algoritma tarjans sendiri sebenarnya dimaksudkan untuk mencari SCC, namun dapat dimodifikasi untuk mendapatkan bridge. Yang dimodifikasi adalah bagian dfsnya dan ada tambahan variabel yaitu parentList. Berbeda dengan mencari scc, saat mencari bridge dfs perlu memperhatikan lowest node yang sedang diproses dengan parentnya.
+
+
+# Referensi
+https://www.w3schools.com/go/go_loops.php
+https://youtu.be/ZeDNSeilf-Y
+https://youtu.be/Rhxs4k6DyMM
+
+Library yang digunakan disini adalah library untuk memvisualisasikan graphviz
+https://github.com/dominikbraun/graph
+
+
