@@ -32,3 +32,21 @@ func readFile(fileName string) AdjacencyList {
 	}
 	return adjacencyList
 }
+
+func min(x int, y int) int {
+	if x >= y {
+		return y
+	} else {
+		return x
+	}
+}
+
+type TupleNameValue struct {
+	nodeName string
+	val      int
+}
+
+type TupleParent struct {
+	nodeName   string
+	parentName string
+}
