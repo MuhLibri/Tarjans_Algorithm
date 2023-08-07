@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"strconv"
+	"time"
 )
 
 func main() {
@@ -25,15 +26,17 @@ func main() {
 	var bridge Bridge
 	scc.adjacencyList = adjacencyList
 	bridge.adjacencyList = adjacencyList
+	startTime := time.Now().UnixNano()
 	scc.findScc()
 	bridge.findBridge()
+	endTime := time.Now().UnixNano()
+	elapsedTime := endTime - startTime
 
 	fmt.Println("SCC List:")
 	fmt.Println(scc.sccList)
 	fmt.Println("Bridge List:")
 	fmt.Println(bridge.bridgeList)
-	runTime := 2.4
-	fmt.Printf("Run time: %f \n", runTime)
+	fmt.Printf("Run time: %v \n", elapsedTime)
 
 	for i, a := range scc.sccList {
 		name := "scc" + strconv.Itoa(i+1)
