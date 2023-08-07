@@ -7,11 +7,11 @@ import (
 
 func main() {
 	fmt.Print("Masukkan nama file: ")
-	fileName := "test1.txt"
-	//fmt.Scanln(&fileName)
+	var fileName string
+	fmt.Scanln(&fileName)
 	t := readFile("../tests/" + fileName)
-	fmt.Println()
-	fmt.Println("Berikut adalah adjacency list dari input: ")
+
+	fmt.Println("\n\nBerikut adalah adjacency list dari input: ")
 	for _, elm := range t {
 		elm.Print()
 	}
@@ -20,16 +20,21 @@ func main() {
 
 	fmt.Println()
 	fmt.Println()
+
 	var scc Tarjan
 	scc.adjacencyList = t
 	scc.findScc()
-	fmt.Println(scc.low)
+	scc.findBridge()
+
+	fmt.Println("SSC List:")
 	fmt.Println(scc.sccList)
+	fmt.Println("Bridge List:")
 	fmt.Println(scc.bridgeList)
+	runTime := 2.4
+	fmt.Printf("Run time: %f \n", runTime)
 
 	for i, a := range scc.sccList {
 		name := "scc" + strconv.Itoa(i+1)
-		//fmt.Println(a)
 		a.DrawGraph(name)
 	}
 

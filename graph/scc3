@@ -1,6 +1,10 @@
 strict digraph {
 
 
+	"C" [  weight=0 ];
+
+	"C" -> "A" [  weight=0 ];
+
 	"B" [  weight=0 ];
 
 	"B" -> "C" [  weight=0 ];
@@ -8,9 +12,5 @@ strict digraph {
 	"A" [  weight=0 ];
 
 	"A" -> "B" [  weight=0 ];
-
-	"C" [  weight=0 ];
-
-	"C" -> "A" [  weight=0 ];
 
 }

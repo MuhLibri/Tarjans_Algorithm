@@ -5,12 +5,18 @@ type Tuple struct {
 	val      int
 }
 
+type Tuple2 struct {
+	nodeName   string
+	parentName string
+}
+
 type Tarjan struct {
 	adjacencyList AdjacencyList
 	n, time       int
 	disc, low     []Tuple
 	stack         Stack
 	sccList       []AdjacencyList
+	parent        []Tuple2
 	bridgeList    []AdjacencyList
 }
 
@@ -71,9 +77,6 @@ func (t *Tarjan) DFS(i int) {
 				node := Node{nodeName, neighbours}
 				tempList = append(tempList, node)
 				t.sccList = append(t.sccList, tempList)
-				if count == 2 {
-					t.bridgeList = append(t.bridgeList, tempList)
-				}
 			}
 		}
 	}
@@ -94,9 +97,59 @@ func (t *Tarjan) findSccNeighbour(nodeIndex int, lowVal int) []string {
 		idx := t.adjacencyList.GetIndex(v)
 		if t.low[idx].val == lowVal {
 			tempList = append(tempList, v)
-		} else {
-			t.bridgeList = append(t.bridgeList, []Node{{name: t.adjacencyList[nodeIndex].name, neighbours: []string{v}}})
 		}
 	}
 	return tempList
+}
+
+func (t *Tarjan) findBridge() {
+	t.n = len(t.adjacencyList)
+	t.low = make([]Tuple, t.n)
+	t.disc = make([]Tuple, t.n)
+	t.parent = make([]Tuple2, t.n)
+
+	for i := 0; i < t.n; i++ {
+		t.disc[i] = Tuple{
+			t.adjacencyList[i].name,
+			-1,
+		}
+		t.low[i] = Tuple{
+			t.adjacencyList[i].name,
+			-1,
+		}
+		t.parent[i] = Tuple2{
+			t.adjacencyList[i].name,
+			"",
+		}
+	}
+
+	t.time = 0
+	for i := 0; i < t.n; i++ {
+		if t.disc[i].val == -1 {
+			t.BDFS(i)
+		}
+	}
+
+}
+
+func (t *Tarjan) BDFS(i int) {
+	t.disc[i].val = t.time
+	t.low[i].val = t.time
+	t.time = t.time + 1
+
+	for _, v := range t.adjacencyList.FindNeighboursOf(t.disc[i].nodeName) {
+		idx := t.adjacencyList.GetIndex(v)
+		if t.disc[idx].val == -1 {
+			t.parent[idx].parentName = t.disc[i].nodeName
+			t.BDFS(idx)
+			t.low[i].val = min(t.low[i].val, t.low[idx].val)
+
+			if t.low[idx].val > t.disc[i].val {
+				t.bridgeList = append(t.bridgeList, []Node{{t.disc[i].nodeName, []string{t.disc[idx].nodeName}}})
+			}
+		} else if v != t.parent[i].parentName {
+			t.low[i].val = min(t.low[i].val, t.disc[idx].val)
+		}
+
+	}
 }
