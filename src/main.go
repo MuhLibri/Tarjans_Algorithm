@@ -16,18 +16,25 @@ func main() {
 		elm.Print()
 	}
 	graphName := "original-graph"
-	t.drawGraph(graphName)
+	t.DrawGraph(graphName)
 
 	fmt.Println()
 	fmt.Println()
-	var scc Scc
+	var scc Tarjan
 	scc.adjacencyList = t
 	scc.findScc()
 	fmt.Println(scc.sccList)
 	fmt.Println(scc.low)
+	fmt.Println(scc.bridgeList)
 
 	for i, a := range scc.sccList {
 		name := "scc" + strconv.Itoa(i+1)
-		a.drawGraph(name)
+		fmt.Println(a)
+		a.DrawGraph(name)
+	}
+
+	for i, b := range scc.bridgeList {
+		name := "bridge" + strconv.Itoa(i+1)
+		b.DrawGraph(name)
 	}
 }

@@ -1,0 +1,12 @@
+strict digraph {
+
+
+	"F" [  weight=0 ];
+
+	"F" -> "E" [  weight=0 ];
+
+	"E" [  weight=0 ];
+
+	"E" -> "F" [  weight=0 ];
+
+}

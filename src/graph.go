@@ -44,7 +44,7 @@ func (n *Node) Print() {
 	fmt.Println()
 }
 
-func (a *AdjacencyList) drawGraph(graphName string) {
+func (a *AdjacencyList) DrawGraph(graphName string) {
 	// Make and draw graph
 	g := graph.New(graph.StringHash, graph.Directed())
 
@@ -52,11 +52,23 @@ func (a *AdjacencyList) drawGraph(graphName string) {
 		_ = g.AddVertex(node.name)
 	}
 
-	for _, node := range *a {
-		for _, edge := range node.neighbours {
-			_ = g.AddEdge(node.name, edge)
+	for _, node1 := range *a {
+		for _, node2 := range node1.neighbours {
+			if !a.HaveNode(node2) {
+				_ = g.AddVertex(node2)
+			}
+			_ = g.AddEdge(node1.name, node2)
 		}
 	}
 	file, _ := os.Create("../graph/" + graphName)
 	_ = draw.DOT(g, file)
+}
+
+func (a AdjacencyList) HaveNode(nodeName string) bool {
+	for _, v := range a {
+		if v.name == nodeName {
+			return true
+		}
+	}
+	return false
 }

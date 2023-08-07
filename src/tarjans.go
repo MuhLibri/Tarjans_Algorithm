@@ -5,70 +5,74 @@ type Tuple struct {
 	val      int
 }
 
-type Scc struct {
+type Tarjan struct {
 	adjacencyList AdjacencyList
 	n, time       int
 	disc, low     []Tuple
 	stack         Stack
 	sccList       []AdjacencyList
+	bridgeList    []AdjacencyList
 }
 
-func (s *Scc) findScc() {
-	s.n = len(s.adjacencyList)
-	s.low = make([]Tuple, s.n)
-	s.disc = make([]Tuple, s.n)
+func (t *Tarjan) findScc() {
+	t.n = len(t.adjacencyList)
+	t.low = make([]Tuple, t.n)
+	t.disc = make([]Tuple, t.n)
 
-	for i := 0; i < s.n; i++ {
-		s.disc[i] = Tuple{
-			s.adjacencyList[i].name,
+	for i := 0; i < t.n; i++ {
+		t.disc[i] = Tuple{
+			t.adjacencyList[i].name,
 			-1,
 		}
-		s.low[i] = Tuple{
-			s.adjacencyList[i].name,
+		t.low[i] = Tuple{
+			t.adjacencyList[i].name,
 			-1,
 		}
 	}
 
-	s.time = 0
-	for i := 0; i < s.n; i++ {
-		if s.disc[i].val == -1 {
-			s.DFS(i)
+	t.time = 0
+	for i := 0; i < t.n; i++ {
+		if t.disc[i].val == -1 {
+			t.DFS(i)
 		}
 	}
 }
 
-func (s *Scc) DFS(i int) {
-	s.disc[i].val = s.time
-	s.low[i].val = s.time
-	s.time = s.time + 1
-	s.stack.Push(s.disc[i].nodeName)
+func (t *Tarjan) DFS(i int) {
+	t.disc[i].val = t.time
+	t.low[i].val = t.time
+	t.time = t.time + 1
+	t.stack.Push(t.disc[i].nodeName)
 
-	for _, v := range s.adjacencyList.FindNeighboursOf(s.disc[i].nodeName) {
-		idx := s.adjacencyList.GetIndex(v)
-		if s.disc[idx].val == -1 {
-			s.DFS(idx)
-			s.low[i].val = min(s.low[i].val, s.low[idx].val)
-		} else if s.stack.Contain(v) {
-			s.low[i].val = min(s.low[i].val, s.disc[idx].val)
+	for _, v := range t.adjacencyList.FindNeighboursOf(t.disc[i].nodeName) {
+		idx := t.adjacencyList.GetIndex(v)
+		if t.disc[idx].val == -1 {
+			t.DFS(idx)
+			t.low[i].val = min(t.low[i].val, t.low[idx].val)
+		} else if t.stack.Contain(v) {
+			t.low[i].val = min(t.low[i].val, t.disc[idx].val)
 		}
 
-		if s.low[i].val == s.disc[i].val {
+		if t.low[i].val == t.disc[i].val {
 			var tempList AdjacencyList
-			for s.stack.Peek() != s.disc[i].nodeName {
-				nodeName := s.stack.Pop()
-				idx := s.adjacencyList.GetIndex(nodeName)
-				allNeighbours := s.adjacencyList[idx].neighbours
-				neighbours := s.findSccNeighbour(allNeighbours, s.low[idx].val)
+			count := 1
+			for t.stack.Peek() != t.disc[i].nodeName {
+				nodeName := t.stack.Pop()
+				idx := t.adjacencyList.GetIndex(nodeName)
+				neighbours := t.findSccNeighbour(idx, t.low[idx].val)
 				node := Node{nodeName, neighbours}
 				tempList = append(tempList, node)
+				count++
 			}
-			nodeName := s.stack.Pop()
-			idx := s.adjacencyList.GetIndex(nodeName)
-			allNeighbours := s.adjacencyList[idx].neighbours
-			neighbours := s.findSccNeighbour(allNeighbours, s.low[idx].val)
+			nodeName := t.stack.Pop()
+			idx := t.adjacencyList.GetIndex(nodeName)
+			neighbours := t.findSccNeighbour(idx, t.low[idx].val)
 			node := Node{nodeName, neighbours}
 			tempList = append(tempList, node)
-			s.sccList = append(s.sccList, tempList)
+			t.sccList = append(t.sccList, tempList)
+			if count == 2 {
+				t.bridgeList = append(t.bridgeList, tempList)
+			}
 		}
 	}
 }
@@ -81,12 +85,15 @@ func min(x int, y int) int {
 	}
 }
 
-func (s *Scc) findSccNeighbour(neighbours []string, lowVal int) []string {
+func (t *Tarjan) findSccNeighbour(nodeIndex int, lowVal int) []string {
+	neighbours := t.adjacencyList[nodeIndex].neighbours
 	var tempList []string
 	for _, v := range neighbours {
-		idx := s.adjacencyList.GetIndex(v)
-		if s.low[idx].val == lowVal {
+		idx := t.adjacencyList.GetIndex(v)
+		if t.low[idx].val == lowVal {
 			tempList = append(tempList, v)
+		} else {
+			t.bridgeList = append(t.bridgeList, []Node{{name: t.adjacencyList[nodeIndex].name, neighbours: []string{v}}})
 		}
 	}
 	return tempList
